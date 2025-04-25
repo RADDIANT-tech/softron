@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { toast } from 'sonner';
-import { Calendar as CalendarIcon, Check, CircleCheck, CircleX, MapPin, Phone, Signature, User } from "lucide-react";
+import { Calendar as CalendarIcon, Check, CircleCheck, CircleX, Mail, MapPin, Phone, Signature, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AnimatedInput from './AnimatedInput';
 import SuccessModal from './SuccessModal';
@@ -24,6 +24,9 @@ const formSchema = z.object({
   }),
   phoneNumber: z.string().min(10, {
     message: "Phone number must be at least 10 digits.",
+  }),
+  email: z.string().email({
+    message: "Invalid email address.",
   }),
   blockCourt: z.string({
     required_error: "Please select a block or court.",
@@ -50,6 +53,7 @@ const RegistrationForm: React.FC = () => {
     defaultValues: {
       fullName: "",
       phoneNumber: "",
+      email: "",
       blockCourt: "",
       roomType: "",
       roomNumber: "",
@@ -269,7 +273,32 @@ const RegistrationForm: React.FC = () => {
               </FormItem>
             )}
           />
-          
+          {/* problem with not submitting inside of sheets */}
+            {/* Email */}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <AnimatedInput
+                  id="email"
+                  label="Email"
+                  type="email"
+                  value={field.value}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  icon={<Mail className="h-5 w-5" />}
+                  validationIcon={field.value && formSchema.shape.email.safeParse(field.value).success ? <CircleCheck className="h-5 w-5" /> : <CircleX className="h-5 w-5" />}
+                  isValid={field.value && formSchema.shape.email.safeParse(field.value).success}
+                  autoComplete="email"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           {/* Block / Court */}
           <FormField
   control={form.control}
