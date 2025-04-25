@@ -428,8 +428,8 @@ const RegistrationForm: React.FC = () => {
               type="submit" 
               className="w-full py-6 text-lg bg-primary hover:bg-primary/90 transition-all duration-300 hover:shadow-lg"
             >
-              <span className="mr-2">Connect Me</span>
-              <Check className="h-5 w-5" />
+              Connect Me
+              <Check className="h-5 w-5 mr-2" />
             </Button>
           </div>
         </form>
