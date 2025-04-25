@@ -1,0 +1,19 @@
+// function doPost(e) {
+//   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+//   const data = JSON.parse(e.postData.contents);
+
+//   sheet.appendRow([
+//     data.fullName,
+//     data.dateOfBirth,
+//     data.phoneNumber,
+//     data.blockCourt,
+//     data.roomType,
+//     data.roomNumber,
+//     data.isCustodian ? "Yes" : "No",
+//     new Date()
+//   ]);
+
+//   return ContentService.createTextOutput(
+//     JSON.stringify({ success: true })
+//   ).setMimeType(ContentService.MimeType.JSON);
+// }
