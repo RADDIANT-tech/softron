@@ -114,7 +114,7 @@ const RegistrationForm: React.FC = () => {
   
     toast.promise(
       // CORS-safe: mode set to "no-cors"
-      fetch("https://script.google.com/macros/s/AKfycbwwfXJC0OHNQJjuc8BU2iAojiNsa-PgtMol47jMRgvX7Kl3HQjcfWyzu8DLOY9FJxnfiA/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbxTRTPw-5OHnEwlu09WKblAV_kFHXAjhca_WsGDqQI9BnXGfx4mUmKgub-A5-FdYh-c/exec", {
         method: "POST",
         mode: "no-cors", // <== disables CORS enforcement
         body: JSON.stringify(payload),
@@ -132,7 +132,6 @@ const RegistrationForm: React.FC = () => {
       }
     );
   };
-  
   
 
   // Auto-capitalize name while typing
