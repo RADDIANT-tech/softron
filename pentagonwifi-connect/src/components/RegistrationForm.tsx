@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { toast } from 'sonner';
-import { Calendar as CalendarIcon, Check, CircleCheck, CircleX, MapPin, Phone, Signature, User } from "lucide-react";
+import { Calendar as CalendarIcon, Check, CircleCheck, CircleX, Mail, MapPin, Phone, Signature, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AnimatedInput from './AnimatedInput';
 import SuccessModal from './SuccessModal';
@@ -24,6 +24,9 @@ const formSchema = z.object({
   }),
   phoneNumber: z.string().min(10, {
     message: "Phone number must be at least 10 digits.",
+  }),
+  email: z.string().email({
+    message: "Invalid email address.",
   }),
   blockCourt: z.string({
     required_error: "Please select a block or court.",
@@ -50,6 +53,7 @@ const RegistrationForm: React.FC = () => {
     defaultValues: {
       fullName: "",
       phoneNumber: "",
+      email: "",
       blockCourt: "",
       roomType: "",
       roomNumber: "",
@@ -112,9 +116,11 @@ const RegistrationForm: React.FC = () => {
       phoneNumber: `'${data.phoneNumber}'`, // Prevent #ERROR! in Google Sheets
     };
   
+console.log({payload: JSON.stringify(payload)});
+
     toast.promise(
       // CORS-safe: mode set to "no-cors"
-      fetch("https://script.google.com/macros/s/AKfycbwwfXJC0OHNQJjuc8BU2iAojiNsa-PgtMol47jMRgvX7Kl3HQjcfWyzu8DLOY9FJxnfiA/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbyN3igjorFwTdGkWSFpPuHzTsGDS8me8oth8u9NLT7W_V6nVgSka8JNWBti1yucNkSa/exec", {
         method: "POST",
         mode: "no-cors", // <== disables CORS enforcement
         body: JSON.stringify(payload),
@@ -132,7 +138,6 @@ const RegistrationForm: React.FC = () => {
       }
     );
   };
-  
   
 
   // Auto-capitalize name while typing
@@ -208,35 +213,7 @@ const RegistrationForm: React.FC = () => {
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 bg-white" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={(date) => {
-                          field.onChange(date);
-                          if (date) {
-                            const currentYear = new Date().getFullYear();
-                            const age = currentYear - date.getFullYear();
-                            if (age >= 18) {
-                              toast.success("Age verification successful", {
-                                description: "You're in!"
-                              });
-                            } else {
-                              toast.warning("Age verification", {
-                                description: "You must be at least 18 years old."
-                              });
-                            }
-                          }
-                        }}
-                        disabled={(date) => {
-                          // Disable future dates and dates more than 100 years in the past
-                          const now = new Date();
-                          const hundredYearsAgo = new Date();
-                          hundredYearsAgo.setFullYear(now.getFullYear() - 100);
-                          return date > now || date < hundredYearsAgo;
-                        }}
-                        initialFocus
-                        className="p-3 pointer-events-auto"
-                      />
+                      
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -270,7 +247,32 @@ const RegistrationForm: React.FC = () => {
               </FormItem>
             )}
           />
-          
+          {/* problem with not submitting inside of sheets */}
+            {/* Email */}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <AnimatedInput
+                  id="email"
+                  label="Email"
+                  type="email"
+                  value={field.value}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  icon={<Mail className="h-5 w-5" />}
+                  validationIcon={field.value && formSchema.shape.email.safeParse(field.value).success ? <CircleCheck className="h-5 w-5" /> : <CircleX className="h-5 w-5" />}
+                  isValid={field.value && formSchema.shape.email.safeParse(field.value).success}
+                  autoComplete="email"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           {/* Block / Court */}
           <FormField
   control={form.control}
@@ -429,8 +431,8 @@ const RegistrationForm: React.FC = () => {
               type="submit" 
               className="w-full py-6 text-lg bg-primary hover:bg-primary/90 transition-all duration-300 hover:shadow-lg"
             >
-              <span className="mr-2">Connect Me</span>
-              <Check className="h-5 w-5" />
+              Connect Me
+              <Check className="h-5 w-5 mr-2" />
             </Button>
           </div>
         </form>
