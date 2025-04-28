@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { CircleCheck } from 'lucide-react';
+import { CircleCheck, Share } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SuccessModalProps {
@@ -32,6 +32,26 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ open, onClose }) => {
     }
   }, [open]);
 
+  function handleShareReferral(event: React.MouseEvent<HTMLButtonElement>): void {
+    event.preventDefault();
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this amazing internet service!",
+          text: "Join me in using this blazing-fast internet that #NeverSleeps. Click the link to learn more!",
+          url: window.location.href,
+        })
+        .then(() => {
+          toast.success("Referral shared successfully!");
+        })
+        .catch((error) => {
+          console.error("Error sharing referral:", error);
+          toast.error("Failed to share referral. Please try again.");
+        });
+    } else {
+      toast.error("Sharing is not supported on this device.");
+    }
+  }
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent 
@@ -68,14 +88,14 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ open, onClose }) => {
             >
               <Calendar size={18} />
               Add to Calendar
-            </Button>
+            </Button> */}
             <Button 
               onClick={handleShareReferral} 
               className="bg-primary hover:bg-primary/90 gap-2"
             >
               <Share size={18} />
               Share Referral
-            </Button> */}
+            </Button>
             
             <Button 
               onClick={onClose} // ✅ use the passed-in onClose handler

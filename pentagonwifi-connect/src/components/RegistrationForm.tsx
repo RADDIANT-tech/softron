@@ -116,9 +116,11 @@ const RegistrationForm: React.FC = () => {
       phoneNumber: `'${data.phoneNumber}'`, // Prevent #ERROR! in Google Sheets
     };
   
+console.log({payload: JSON.stringify(payload)});
+
     toast.promise(
       // CORS-safe: mode set to "no-cors"
-      fetch("https://script.google.com/macros/s/AKfycbxTRTPw-5OHnEwlu09WKblAV_kFHXAjhca_WsGDqQI9BnXGfx4mUmKgub-A5-FdYh-c/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbyN3igjorFwTdGkWSFpPuHzTsGDS8me8oth8u9NLT7W_V6nVgSka8JNWBti1yucNkSa/exec", {
         method: "POST",
         mode: "no-cors", // <== disables CORS enforcement
         body: JSON.stringify(payload),
@@ -211,35 +213,7 @@ const RegistrationForm: React.FC = () => {
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 bg-white" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={(date) => {
-                          field.onChange(date);
-                          if (date) {
-                            const currentYear = new Date().getFullYear();
-                            const age = currentYear - date.getFullYear();
-                            if (age >= 18) {
-                              toast.success("Age verification successful", {
-                                description: "You're in!"
-                              });
-                            } else {
-                              toast.warning("Age verification", {
-                                description: "You must be at least 18 years old."
-                              });
-                            }
-                          }
-                        }}
-                        disabled={(date) => {
-                          // Disable future dates and dates more than 100 years in the past
-                          const now = new Date();
-                          const hundredYearsAgo = new Date();
-                          hundredYearsAgo.setFullYear(now.getFullYear() - 100);
-                          return date > now || date < hundredYearsAgo;
-                        }}
-                        initialFocus
-                        className="p-3 pointer-events-auto"
-                      />
+                      
                     </PopoverContent>
                   </Popover>
                 </div>
